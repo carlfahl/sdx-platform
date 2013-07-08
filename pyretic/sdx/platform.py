@@ -8,63 +8,70 @@ from pyretic.lib.corelib import *
 from pyretic.lib.std import *
 
 ## SDX-specific imports
-from config import *
+from core import *
 
-## SDX functions
-def sdx_restrict_state(participant):
-    '''
-        Prefix a match on the participant's state variable
-        before any of the participant's policy to ensure that
-        it cannot match on other participant's flowspace
-    '''
-    return match(state=participant.input_var) & participant.policies
-
-def sdx_preprocessing():
-    '''
-        Map incoming packets on participant's ports to the corresponding
-        incoming state
-    '''
-    preprocessing_policies = []
-    for participant in sdx_config.participants:
-        for port in participant.ports:
-            preprocessing_policies.append((match(inport=port.id_) & modify(state=participant.input_var)))
-    return parallel(preprocessing_policies)
-
-def sdx_postprocessing():
-    '''
-        Forward outgoing packets to the appropriate participant's ports
-        based on the outgoing state
-    '''
-    postprocessing_policies = []
-    for participant in sdx_config.participants:
-        for output_var in participant.output_vars:
-            postprocessing_policies.append((match(state=output_var) & pop("state") & fwd(participant.output_vars[output_var].id_)))
-    return parallel(postprocessing_policies)
-
-def sdx_participant_policies():
-    '''
-        Sequentially compose the // composition of the participants policy k-times where
-        k is the number of participants
-    '''
-    sdx_policy = passthrough
-    for k in sdx_config.participants:
-        sdx_policy = sequential([
-                sdx_policy,
-                parallel(
-                    [sdx_restrict_state(participant) for participant in sdx_config.participants]
-                )])
-    return sdx_policy
-
-def sdx_platform():
+def sdx_platform(sdx_config):
     '''
         Defines the SDX platform workflow
     '''
     return (
-        sdx_preprocessing() >>
-        sdx_participant_policies() >>
-        sdx_postprocessing()
+        sdx_preprocessing(sdx_config) >>
+        sdx_participant_policies(sdx_config) >>
+        sdx_postprocessing(sdx_config)
     )
 
 ### SDX Platform: Main ###
-def main(): 
-    return sdx_platform()
+def main():
+    
+    ####    
+    #### Ports definitions
+    ####
+    port_A = Port(
+        id_ = 1, 
+        mac = MAC('00:00:00:00:00:01'), 
+        ip = IP('110.0.0.1')
+    )
+
+    port_B = Port(
+        id_ = 2, 
+        mac = MAC('00:00:00:00:00:02'), 
+        ip = IP('120.0.0.1')
+    )
+
+    port_C = Port(
+        id_ = 3, 
+        mac = MAC('00:00:00:00:00:03'), 
+        ip = IP('130.0.0.1')
+    )
+
+    ####
+    #### Participant definitions
+    ####
+    participant_A = SDXParticipant(id_ = "A", ports = [port_A])
+    participant_B = SDXParticipant(id_ = "B", ports = [port_B])
+    participant_C = SDXParticipant(id_ = "C", ports = [port_C])
+
+    sdx = SDXConfig()
+    sdx.add_participant(participant_A)
+    sdx.add_participant(participant_B)
+    sdx.add_participant(participant_C)
+
+    ####
+    #### Policies definition
+    ####
+    participant_A.policies = (
+        (match(dstip=port_A.ip) & sdx.fwd(port_A)) +
+        (match(dstip=port_C.ip) & sdx.fwd("B"))
+    )
+
+    participant_B.policies=(
+        (match(dstip=port_C.ip) & modify(srcmac=port_B.mac, dstmac=port_C.mac) & sdx.fwd("C")) +
+        (match(dstip=port_A.ip) & modify(srcmac=port_B.mac, dstmac=port_A.mac) & sdx.fwd("A"))
+    )
+
+    participant_C.policies=(
+        (match(dstip=port_C.ip) & sdx.fwd(port_C)) +
+        (match(dstip=port_A.ip) & sdx.fwd("B"))
+    )
+    
+    return sdx_platform(sdx)
