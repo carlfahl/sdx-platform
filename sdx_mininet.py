@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 ## Author: Arpit Gupta (glex.qsd@gmail.com)
 """
     scp this script to VM running Mininet. 
