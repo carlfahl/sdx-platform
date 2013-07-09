@@ -7,7 +7,7 @@ How to run it?
 
 Execute `python pyretic.py pyretic.sdx.platform`. After this launch the Mininet experiment.
 
-How to launch Mininet ??  
+How to launch the Mininet Experiment ??  
 ------------------------  
 
 * Transfer the file `sdx_mininet.py` to your Mininet VM.
@@ -15,12 +15,12 @@ How to launch Mininet ??
 
 This Mininet script creates a single topology with three hosts. It does all the interface configurations, routing table updates etc. and finally runs two ping tests.  
 
-If any problem with this script then follow these steps manually:  
+If you face any problem with `sdx_mininet.py` script, then follow these steps manually:  
 
-* Launching Mininet  
+* Creating the topology with three ASs and one IXP switch:  
 `sudo mn --controller=remote --topo=single,3 --mac --arp`
 
-* Configuring the hosts in Mininet
+* Configuring the participating ASs in Mininet: 
 `h1 ifconfig lo:40 110.0.0.1 netmask 255.255.255.0 up` 
 `h2 ifconfig lo:40 120.0.0.1 netmask 255.255.255.0 up` 
 `h3 ifconfig lo:40 130.0.0.1 netmask 255.255.255.0 up`  
