@@ -21,8 +21,7 @@ If any problem with this script then follow these steps manually:
 * Configuring the hosts in Mininet
 `h1 ifconfig lo:40 110.0.0.1 netmask 255.255.255.0 up` 
 `h2 ifconfig lo:40 120.0.0.1 netmask 255.255.255.0 up` 
-`h3 ifconfig lo:40 130.0.0.1 netmask 255.255.255.0 up`
-
+`h3 ifconfig lo:40 130.0.0.1 netmask 255.255.255.0 up`  
 `h1 route add -net 130.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h1-eth0` 
 `h3 route add -net 110.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h3-eth0`
 
