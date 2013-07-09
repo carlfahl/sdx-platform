@@ -7,7 +7,7 @@ How to run it?
 
 Execute `python pyretic.py pyretic.sdx.platform`. 
 
-Launch Mininet:
+Launch Mininet:  
 Transfer the file 'sdx_mininet.py' to your Mininet VM.
 Run the command, ' sudo python sdx_mininet.py' 
 This Mininet script creates a single topology with three hosts.  It does all the interface configurations, routing table updates etc. and finally runs two ping tests. 
