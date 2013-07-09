@@ -26,6 +26,6 @@ If any problem with this script then follow these steps manually:
 `h3 route add -net 110.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h3-eth0`
 
 * Starting a ping with the appropriate source and destination mac addresses  
-`h1 ping -I 110.0.0.1 130.0.0.1`
+`h1 ping -I 110.0.0.1 130.0.0.1`  
 `h3 ping -I 130.0.0.1 110.0.0.1` 
 
