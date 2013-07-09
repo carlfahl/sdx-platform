@@ -29,7 +29,7 @@ class SDXConfig(object):
     def __init__(self):
         self.participants = []
 
-        self.participant_id_to_in_var = {}        
+        self.participant_id_to_in_var = {}
         self.out_var_to_port = {}
         self.port_id_to_out_var = {}
     
