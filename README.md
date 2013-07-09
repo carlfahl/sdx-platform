@@ -5,9 +5,11 @@ SDX Platform
 How to run it?
 --------------
 
-Execute `python pyretic.py pyretic.sdx.platform`. 
+Execute `python pyretic.py pyretic.sdx.platform`. After this launch the Mininet experiment.
 
-Launch Mininet:  
+How to launch Mininet ??  
+------------------------  
+
 * Transfer the file `sdx_mininet.py` to your Mininet VM.
 * Run the command, `sudo python sdx_mininet.py`   
 
