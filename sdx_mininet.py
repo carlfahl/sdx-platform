@@ -31,16 +31,17 @@ class SDXSwitchTopo(Topo):
 
 def Traffic_Offloading():
     "Create and test SDX Traffic Offloading Module"
+    print "Creating the topology with one IXP switch and three participating ASs\n\n" 
     topo = SDXSwitchTopo(n=3)
     c0 = RemoteController( 'c0', ip=controller_ip )
     net = Mininet(topo, autoSetMacs=True, autoStaticArp=True)
     net.controllers=[c0]
     net.start()
     hosts=net.hosts
-    print hosts
+    #print hosts
+    print "Configuring participating ASs\n\n"
     for host in hosts:
         if host.name=='h1':
-	    print "h1 detected"
 	    host.cmd('ifconfig lo:40 110.0.0.1 netmask 255.255.255.0 up')
 	    host.cmd('route add -net 130.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h1-eth0')
 	if host.name=='h2':
@@ -48,18 +49,16 @@ def Traffic_Offloading():
 	if host.name=='h3':
             host.cmd('ifconfig lo:40 130.0.0.1 netmask 255.255.255.0 up') 
 	    host.cmd('route add -net 110.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h3-eth0')
-    """print "Showing the inteface updates"
     
-    for host in hosts:
-	print host.cmd('ifconfig')  
-    """
+    print "Running the Ping Tests\n\n"
     for host in hosts:
 	if host.name=='h1':
             host.cmdPrint('ping -c 5 -I 110.0.0.1 130.0.0.1')
         if host.name=='h3':
             host.cmdPrint('ping -c 5 -I 130.0.0.1 110.0.0.1')
-
+    #print "\n\nExperiment Complete !\n\n"
     net.stop()
+    print "\n\nExperiment Complete !\n\n"
 
 if __name__ == '__main__':
     # Tell mininet to print useful information
