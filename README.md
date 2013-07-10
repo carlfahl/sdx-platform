@@ -49,7 +49,6 @@ If you face any problem with `sdx_mininet.py` script, then follow these steps ma
 `h2 ifconfig lo:40 120.0.0.1 netmask 255.255.255.0 up` 
 `h3 ifconfig lo:40 130.0.0.1 netmask 255.255.255.0 up` 
 `h4 ifconfig lo:40 140.0.0.1 netmask 255.255.255.0 up`
-
 `h1 route add -net 130.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h1-eth0`
 `h1 route add -net 140.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h1-eth0`
 `h3 route add -net 110.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h3-eth0`
