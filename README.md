@@ -2,12 +2,36 @@
 SDX Platform
 ============
 
-How to run it?
+Installation Steps
+--------------
+
+1) Download Pyretic v0.2.0
+> $ wget http://frenetic-lang.org/pyretic/vms/pyretic_0.2.0.ova
+
+2) Update Mininet
+> $ cd ~/mininet
+> $ git pull --rebase
+> $ sudo make develop
+
+3) Clone sdx-platform repository to your home directory 
+> $ cd ~   
+> $ git clone https://github.com/sdn-ixp/sdx-platform.git
+
+4) 5) Setup your environment variables
+remove following lines from end of .profile:
+> export PATH=$PATH:$HOME/pyretic:$HOME/pox   
+> export PYTHONPATH=$HOME/pyretic:$HOME/mininet:$HOME/pox
+
+and add the following lines instead:
+> export PATH=$PATH:$HOME/sdx-platform:$HOME/pox   
+> export PYTHONPATH=$HOME/sdx-platform:$HOME/mininet:$HOME/pox
+
+Running SDX Plaform
 --------------
 
 Execute `python pyretic.py pyretic.sdx.platform`. After this launch the Mininet experiment.
 
-How to launch the Mininet Experiment ??  
+Launching the Mininet Experiment  
 ------------------------  
 
 * Transfer the file `sdx_mininet.py` to your Mininet VM.
