@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-    author: Arpit Gupta
+    Author: Arpit Gupta (glex.qsd@gmail.com)
     scp this script to VM running Mininet. 
     Make sure you have appropriate $PYTHONPATH
     Make sure your controller ip address is 192.168.56.1, else modify the controller_ip

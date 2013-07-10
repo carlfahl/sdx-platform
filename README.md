@@ -2,16 +2,40 @@
 SDX Platform
 ============
 
-How to run it?
+Installation Steps
+--------------
+
+If you haven't already done so, download Pyretic v0.2.0
+> $ wget http://frenetic-lang.org/pyretic/vms/pyretic_0.2.0.ova
+
+In your Virtual Machine:
+
+a. Update the copy of Mininet (this resolves the `--arp` issue) 
+> $ cd ~/mininet; git pull --rebase; sudo make develop
+
+b. Clone sdx-platform repository to your home directory
+> $ cd ~   
+> $ git clone https://github.com/sdn-ixp/sdx-platform.git
+
+c. Setup your environment variables,
+remove following lines from end of `~/.profile`:
+> export PATH=$PATH:$HOME/pyretic:$HOME/pox   
+> export PYTHONPATH=$HOME/pyretic:$HOME/mininet:$HOME/pox
+
+and add the following lines, instead:
+> export PATH=$PATH:$HOME/sdx-platform:$HOME/pox   
+> export PYTHONPATH=$HOME/sdx-platform:$HOME/mininet:$HOME/pox
+
+Running SDX Plaform
 --------------
 
 Execute `python pyretic.py pyretic.sdx.platform`. After this launch the Mininet experiment.
 
-How to launch the Mininet Experiment ??  
+Launching the Mininet Experiment  
 ------------------------  
 
-* Transfer the file `sdx_mininet.py` to your Mininet VM.
-* Run the command, `sudo python sdx_mininet.py`   
+* Transfer the file `sdx_mininet.py` to your Mininet VM.  
+* Run the command, `sudo python sdx_mininet.py`     
 
 This Mininet script creates a single topology with three hosts. It does all the interface configurations, routing table updates etc. and finally runs two ping tests.  
 
