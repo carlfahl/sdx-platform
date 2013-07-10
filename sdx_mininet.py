@@ -1,5 +1,6 @@
-## Author: Arpit Gupta (glex.qsd@gmail.com)
+#!/usr/bin/python
 """
+    author: Arpit Gupta
     scp this script to VM running Mininet. 
     Make sure you have appropriate $PYTHONPATH
     Make sure your controller ip address is 192.168.56.1, else modify the controller_ip
@@ -32,7 +33,7 @@ class SDXSwitchTopo(Topo):
 def Traffic_Offloading():
     "Create and test SDX Traffic Offloading Module"
     print "Creating the topology with one IXP switch and three participating ASs\n\n" 
-    topo = SDXSwitchTopo(n=3)
+    topo = SDXSwitchTopo(n=4)
     c0 = RemoteController( 'c0', ip=controller_ip )
     net = Mininet(topo, autoSetMacs=True, autoStaticArp=True)
     net.controllers=[c0]
@@ -42,21 +43,26 @@ def Traffic_Offloading():
     print "Configuring participating ASs\n\n"
     for host in hosts:
         if host.name=='h1':
-	    host.cmd('ifconfig lo:40 110.0.0.1 netmask 255.255.255.0 up')
-	    host.cmd('route add -net 130.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h1-eth0')
-	if host.name=='h2':
-	    host.cmd('ifconfig lo:40 120.0.0.1 netmask 255.255.255.0 up')
-	if host.name=='h3':
+            host.cmd('ifconfig lo:40 110.0.0.1 netmask 255.255.255.0 up')
+            host.cmd('route add -net 130.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h1-eth0')
+            host.cmd('route add -net 140.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h1-eth0')
+        if host.name=='h2':
+            host.cmd('ifconfig lo:40 120.0.0.1 netmask 255.255.255.0 up')
+        if host.name=='h3':
             host.cmd('ifconfig lo:40 130.0.0.1 netmask 255.255.255.0 up') 
-	    host.cmd('route add -net 110.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h3-eth0')
+            host.cmd('route add -net 110.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h3-eth0')
+        if host.name=='h4':
+            host.cmd('ifconfig lo:40 140.0.0.1 netmask 255.255.255.0 up')
+            host.cmd('route add -net 110.0.0.0 netmask 255.255.255.0 gw 10.0.0.2 h4-eth0')
     
     print "Running the Ping Tests\n\n"
     for host in hosts:
-	if host.name=='h1':
+        if host.name=='h1':
             host.cmdPrint('ping -c 5 -I 110.0.0.1 130.0.0.1')
         if host.name=='h3':
             host.cmdPrint('ping -c 5 -I 130.0.0.1 110.0.0.1')
-    #print "\n\nExperiment Complete !\n\n"
+        if host.name=='h1':
+            host.cmdPrint('ping -c 5 -I 110.0.0.1 140.0.0.1')
     net.stop()
     print "\n\nExperiment Complete !\n\n"
 
