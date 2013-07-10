@@ -17,12 +17,12 @@ Installation Steps
 > $ cd ~   
 > $ git clone https://github.com/sdn-ixp/sdx-platform.git
 
-4) Setup your environment variables
+4) Setup your environment variables,
 remove following lines from end of .profile:
 > export PATH=$PATH:$HOME/pyretic:$HOME/pox   
 > export PYTHONPATH=$HOME/pyretic:$HOME/mininet:$HOME/pox
 
-and add the following lines instead:
+add the following lines instead:
 > export PATH=$PATH:$HOME/sdx-platform:$HOME/pox   
 > export PYTHONPATH=$HOME/sdx-platform:$HOME/mininet:$HOME/pox
 
