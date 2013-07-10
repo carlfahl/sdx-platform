@@ -32,8 +32,8 @@ Execute `python pyretic.py pyretic.sdx.platform`. After this launch the Mininet 
 Launching the Mininet Experiment  
 ------------------------  
 
-* Transfer the file `sdx_mininet.py` to your Mininet VM.
-* Run the command, `sudo python sdx_mininet.py`   
+> Transfer the file `sdx_mininet.py` to your Mininet VM.
+> Run the command, `sudo python sdx_mininet.py`   
 
 This Mininet script creates a single topology with three hosts. It does all the interface configurations, routing table updates etc. and finally runs two ping tests.  
 
