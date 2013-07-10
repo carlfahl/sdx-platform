@@ -21,8 +21,8 @@ remove following lines from end of .profile:
 > export PYTHONPATH=$HOME/pyretic:$HOME/mininet:$HOME/pox
 
 add the following lines instead:
-> $ export PATH=$PATH:$HOME/sdx-platform:$HOME/pox   
-> $ export PYTHONPATH=$HOME/sdx-platform:$HOME/mininet:$HOME/pox
+> export PATH=$PATH:$HOME/sdx-platform:$HOME/pox   
+> export PYTHONPATH=$HOME/sdx-platform:$HOME/mininet:$HOME/pox
 
 Running SDX Plaform
 --------------
