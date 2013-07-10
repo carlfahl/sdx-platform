@@ -44,7 +44,8 @@ If you face any problem with `sdx_mininet.py` script, then follow these steps ma
 * Creating the topology with three ASs and one IXP switch:  
 `sudo mn --controller=remote --topo=single,3 --mac --arp`
 
-* Configuring the participating ASs in Mininet: 
+* Configuring the participating ASs in Mininet:
+
 `h1 ifconfig lo:40 110.0.0.1 netmask 255.255.255.0 up` 
 `h2 ifconfig lo:40 120.0.0.1 netmask 255.255.255.0 up` 
 `h3 ifconfig lo:40 130.0.0.1 netmask 255.255.255.0 up` 
