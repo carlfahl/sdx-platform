@@ -9,9 +9,7 @@ Installation Steps
 > $ wget http://frenetic-lang.org/pyretic/vms/pyretic_0.2.0.ova
 
 2) Update Mininet
-> $ cd ~/mininet
-> $ git pull --rebase
-> $ sudo make develop
+> $ cd ~/mininet; git pull --rebase; sudo make develop
 
 3) Clone sdx-platform repository to your home directory 
 > $ cd ~   
