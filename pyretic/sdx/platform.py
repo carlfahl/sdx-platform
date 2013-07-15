@@ -1,6 +1,7 @@
 ################################################################################
 # SDX: Software-Internet Exchange                                              #
 # Author: Laurent Vanbever                                                     #
+# Author: Arpit Gupta(glex.qsd@gmail.com) 
 ################################################################################
 
 ## Pyretic-specific imports
@@ -58,24 +59,26 @@ def main():
     ####
     #### Policies definition
     ####
-    participant_A.policies = (
-        if_(sdx_from(vport_C) , drop) >> (
-            (match(dstip=ip_A)  & sdx.fwd(port_A)) +
-            (match(dstip=ip_C1) & sdx.fwd(vport_B)) +
-            (match(dstip=ip_C2) & sdx.fwd(vport_B))
-        )
-    )
+        
+    participant_A.init_policy((match(dstip=ip_A)  & sdx.fwd(port_A)))
+    participant_A.add_policy((match(dstip=ip_C1) & sdx.fwd(vport_B)))
+    participant_A.add_policy((match(dstip=ip_C2) & sdx.fwd(vport_B)))
+    participant_A.policies=if_(sdx_from(vport_C) , drop)>>participant_A.policies
+    #print "Policy for A after addition"
+    #print participant_A.policies
 
-    participant_B.policies=(
-        (match(dstip=ip_C1) & modify(srcmac=vport_B.mac, dstmac=vport_C.mac) & sdx.fwd(vport_C)) +
-        (match(dstip=ip_C2) & modify(srcmac=vport_B.mac, dstmac=vport_C.mac) & sdx.fwd(vport_C)) +
-        (match(dstip=ip_A)  & modify(srcmac=vport_B.mac, dstmac=vport_A.mac) & sdx.fwd(vport_A))
-    )
+    
+    participant_B.init_policy((match(dstip=ip_C1) & modify(srcmac=vport_B.mac, dstmac=vport_C.mac) & sdx.fwd(vport_C)))
+    participant_B.add_policy((match(dstip=ip_C2) & modify(srcmac=vport_B.mac, dstmac=vport_C.mac) & sdx.fwd(vport_C)))
+    participant_B.add_policy( (match(dstip=ip_A)  & modify(srcmac=vport_B.mac, dstmac=vport_A.mac) & sdx.fwd(vport_A)))
+    
 
-    participant_C.policies=(
-        (match(dstip=ip_C1) & sdx.fwd(port_C1)) +
-        (match(dstip=ip_C2) & sdx.fwd(port_C2)) +
-        (match(dstip=ip_A)  & sdx.fwd(vport_B))
-    )
+    participant_C.init_policy((match(dstip=ip_C1) & sdx.fwd(port_C1)))
+    participant_C.add_policy((match(dstip=ip_C2) & sdx.fwd(port_C2)))
+    participant_C.add_policy((match(dstip=ip_A)  & sdx.fwd(vport_B)))
+    
+    #print "Policy for C after addition"
+    #print participant_C.policies
+    
     
     return sdx_platform(sdx)

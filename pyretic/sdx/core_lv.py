@@ -1,7 +1,5 @@
-################################################################################
-# SDX: Software-Internet Exchange                                              #
+#SDX: Software-Internet Exchange                                              #
 # Author: Laurent Vanbever                                                     #
-# Author: Arpit Gupta(glex.qsd@gmail.com) 
 ################################################################################
 
 ## Pyretic-specific imports
@@ -13,37 +11,17 @@ from pyretic.lib.std import *
 ###
 class Port(object):
     """Represents a switch port"""
-    def __init__(self, mac, participant=None):
-        self.mac = mac
-        self.participant = participant
-
-class PhysicalPort(Port):
-    """Abstract class that represents a physical port"""
-    def __init__(self, id_, *args, **kwargs):
-        super(PhysicalPort, self).__init__(*args, **kwargs)
+    def __init__(self, id_, mac, ip):
         self.id_ = id_
-
-class VirtualPort(Port):
-    """Abstract class that represents a virtual port"""
-    def __init__(self, *args, **kwargs):
-        super(VirtualPort, self).__init__(*args, **kwargs)
+        self.mac = mac
+        self.ip = ip
 
 class SDXParticipant(object):
     """Represent a particular SDX participant"""
-    def __init__(self, id_, vport, phys_ports, policies=None):
+    def __init__(self, id_, ports, policies=None):
         self.id_ = id_
-        self.vport = vport
-        self.phys_ports = phys_ports
-        self.policies = policies        
-        self.vport.participant = self ## set the participant
-        self.n_policies=0
-    
-    def init_policy(self,new_policy):
-        self.policies=new_policy
-        self.n_policies=1
-    def add_policy(self,new_policy):
-        self.policies=parallel([self.policies,new_policy])
-        self.n_policies+=1
+        self.ports = ports
+        self.policies = policies
 
 class SDXConfig(object):
     """Represent a SDX platform configuration"""
@@ -58,37 +36,26 @@ class SDXConfig(object):
         self.participants.append(participant)
         self.participant_id_to_in_var[participant.id_] = "in" + participant.id_.upper()
         i = 0
-        for port in participant.phys_ports:
+        for port in participant.ports:
             self.port_id_to_out_var[port.id_] = "out" + participant.id_.upper() + "_" + str(i)
             self.out_var_to_port["out" + participant.id_.upper() + "_" + str(i)] = port
-            i += 1
     
     def fwd(self, port):
-        if isinstance(port, PhysicalPort):
-            return modify(state=self.port_id_to_out_var[port.id_], dstmac=port.mac)
+        if isinstance(port, Port):
+            return modify(state=self.port_id_to_out_var[port.id_])
         else:
-            return modify(state=self.participant_id_to_in_var[port.participant.id_])
+            return modify(state=self.participant_id_to_in_var[port])
 ###
 ### SDX high-level functions
 ###
-
-def sdx_from(vport):
-    '''
-        Helper function that given a vport
-        return a match function for all the physical macs behind that vport
-        this is useful to avoid communication between two participants
-    '''
-    match_all_physical_port = no_packets
-    for phys_port in vport.participant.phys_ports:
-        match_all_physical_port = match_all_physical_port | match(srcmac=phys_port.mac)
-    return match_all_physical_port
-
 def sdx_restrict_state(sdx_config, participant):
     '''
         Prefix a match on the participant's state variable
         before any of the participant's policy to ensure that
         it cannot match on other participant's flowspace
     '''
+    print "Resctict called for: "+participant.id_
+    print participant.policies
     return match(state=sdx_config.participant_id_to_in_var[participant.id_]) & participant.policies
 
 def sdx_preprocessing(sdx_config):
@@ -98,7 +65,7 @@ def sdx_preprocessing(sdx_config):
     '''
     preprocessing_policies = []
     for participant in sdx_config.participants:
-        for port in participant.phys_ports:
+        for port in participant.ports:
             preprocessing_policies.append((match(inport=port.id_) & 
                 modify(state=sdx_config.participant_id_to_in_var[participant.id_])))
     return parallel(preprocessing_policies)
