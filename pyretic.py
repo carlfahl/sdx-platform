@@ -110,13 +110,14 @@ def main():
         print ''
         op.print_usage()
         sys.exit(1)
-
+    print "Initial things work fine "
     main = module.main
     kwargs = { k : v for [k,v] in [ i.lstrip('--').split('=') for i in kwargs_to_pass ]}
 
     sys.setrecursionlimit(1500) #INCREASE THIS IF "maximum recursion depth exceeded"
     
     runtime = Runtime(Backend(),main,kwargs,options.mode,options.verbosity,False,False)
+    print "Runtime works fine"
     if not options.frontend_only:
         try:
             output = subprocess.check_output('echo $PYTHONPATH',shell=True).strip()
@@ -124,6 +125,7 @@ def main():
             print 'Error: Unable to obtain PYTHONPATH'
             sys.exit(1)
         poxpath = None
+        print "find pox path "
         for p in output.split(':'):
              if re.match('.*pox/?$',p):
                  poxpath = os.path.abspath(p)
@@ -131,13 +133,14 @@ def main():
         if poxpath is None:
             print 'Error: pox not found in PYTHONPATH'
             sys.exit(1)
+        print "found pox path "+str(poxpath)
         pox_exec = os.path.join(poxpath,'pox.py')
         python=sys.executable
         of_client = subprocess.Popen([python, 
                                       pox_exec,
                                       'of_client.pox_client' ],
                                      stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    
+   	print of_client 
     signal.signal(signal.SIGINT, signal_handler)
     signal.pause()
 
