@@ -7,9 +7,14 @@
 ## Pyretic-specific imports
 from pyretic.lib.corelib import *
 from pyretic.lib.std import *
+import logging as log
+log.basicConfig(filename='sdx.log',level=log.INFO)
 
 ## SDX-specific imports
 from core import *
+import as_interface
+
+
 
 def sdx_platform(sdx_config):
     '''
@@ -23,9 +28,11 @@ def sdx_platform(sdx_config):
 
 ### SDX Platform: Main ###
 def main():
-    
-    ip_A  = IP('110.0.0.1')
-    ip_B  = IP('120.0.0.1')
+
+    ## Initial configuration task....in future will read all this info from config file
+
+    ip_A = IP('110.0.0.1')
+    ip_B = IP('120.0.0.1')
     ip_C1 = IP('130.0.0.1')
     ip_C2 = IP('140.0.0.1')
     
@@ -56,14 +63,29 @@ def main():
     sdx.add_participant(participant_B)
     sdx.add_participant(participant_C)
 
+
+    ## End initial configuration
+
+    # policies will be updated from the remote ASs...
+
+    # start the interface for ASes to communicate their policies
+    log.info('Start the thread for the AS interface')
+    interfaceThread = as_interface.as_interface_thread("interface")
+    interfaceThread.daemon = True
+    interfaceThread.start()
+    
+
     ####
     #### Policies definition
     ####
-        
-    participant_A.init_policy((match(dstip=ip_A)  & sdx.fwd(port_A)))
+    ip1='ip_A'
+    policy1='(match(dstip='+ip+') & sdx.fwd(port_A))'
+    participant_A.init_policy((match(dstip=ip_A) & sdx.fwd(port_A)))
+    #participant_A.init_policy(policy1)
+    print participant_A.policies
     participant_A.add_policy((match(dstip=ip_C1) & sdx.fwd(vport_B)))
     participant_A.add_policy((match(dstip=ip_C2) & sdx.fwd(vport_B)))
-    participant_A.policies=if_(sdx_from(vport_C) , drop)>>participant_A.policies
+    participant_A.policies=if_(sdx_from(vport_C), drop) >> participant_A.policies
     #print "Policy for A after addition"
     #print participant_A.policies
 
