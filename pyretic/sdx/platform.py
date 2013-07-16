@@ -79,7 +79,7 @@ def main():
     #### Policies definition
     ####
     ip1='ip_A'
-    policy1='(match(dstip='+ip+') & sdx.fwd(port_A))'
+    policy1='(match(dstip='+ip1+') & sdx.fwd(port_A))'
     participant_A.init_policy((match(dstip=ip_A) & sdx.fwd(port_A)))
     #participant_A.init_policy(policy1)
     print participant_A.policies
