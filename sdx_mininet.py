@@ -19,7 +19,7 @@ from mininet.cli import CLI
 
 def getArgs():
     cli = False;
-    controller = '192.168.56.1'    
+    controller = '127.0.0.1'    
     application = 'TO'
     
     try:
