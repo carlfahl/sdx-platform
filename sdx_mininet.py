@@ -44,9 +44,7 @@ def trafficOffloading(cli, controllerIP):
     "Create and test SDX Traffic Offloading Module"
     print "Creating the topology with one IXP switch and three participating ASs\n\n" 
     topo = SingleSwitchTopo(k=4)
-    c0 = RemoteController('c0', ip=controllerIP)
-    net = Mininet(topo, autoSetMacs=True, autoStaticArp=True)
-    net.controllers=[c0]
+    net = Mininet(topo, controller=lambda name: RemoteController( 'c0', controllerIP ), autoSetMacs=True, autoStaticArp=True)
     net.start()
     hosts=net.hosts
     print "Configuring participating ASs\n\n"
